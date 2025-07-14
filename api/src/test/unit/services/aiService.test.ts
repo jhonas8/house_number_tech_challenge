@@ -1,60 +1,34 @@
-import { AIService, IAIClient } from '../../../services/aiService';
+import { AIService } from '../../../aiServices/aiService';
+import { AiCompletion } from '../../../clients/AiCompletion';
 
-const mockCompletion = (summary: string) => ({
-  choices: [
-    { message: { content: summary } }
-  ]
-});
+const mockCompletion = (summary: string) => summary;
 
 describe('AIService', () => {
-  let mockClient: IAIClient;
+  let mockClient: AiCompletion;
   let aiService: AIService;
 
   beforeEach(() => {
-    const createMock = jest.fn();
     mockClient = {
-      chat: {
-        completions: {
-          create: createMock
-        }
-      }
+      generateCompletion: jest.fn()
     };
     aiService = new AIService(mockClient);
   });
 
   describe('generateSummary', () => {
-    it('should call OpenAI with the correct prompt and return the summary', async () => {
+    it('should call generateCompletion with the correct prompt and return the summary', async () => {
       const summary = 'This is a concise summary.';
-      (mockClient.chat.completions.create as jest.Mock).mockResolvedValueOnce(mockCompletion(summary));
+      (mockClient.generateCompletion as jest.Mock).mockResolvedValueOnce(summary);
 
       const result = await aiService.generateSummary('Some long text to summarize.');
       
       expect(result).toBe(summary);
-      expect(mockClient.chat.completions.create).toHaveBeenCalledWith({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: "You are a helpful assistant that creates concise summaries. Always respond with summaries of 30 words or less."
-          },
-          {
-            role: "user",
-            content: "Summarize the following text in 30 words or less: Some long text to summarize."
-          }
-        ],
-        max_tokens: 100,
-        temperature: 0.3
-      });
+      expect(mockClient.generateCompletion).toHaveBeenCalledWith(
+        'Summarize the following text in 30 words or less: Some long text to summarize.'
+      );
     });
 
-    it('should throw an error if OpenAI returns no summary', async () => {
-      (mockClient.chat.completions.create as jest.Mock).mockResolvedValueOnce({ choices: [{}] });
-
-      await expect(aiService.generateSummary('text')).rejects.toThrow('Failed to generate summary');
-    });
-
-    it('should throw an error if OpenAI throws', async () => {
-      (mockClient.chat.completions.create as jest.Mock).mockRejectedValueOnce(new Error('API error'));
+    it('should throw an error if generateCompletion throws', async () => {
+      (mockClient.generateCompletion as jest.Mock).mockRejectedValueOnce(new Error('API error'));
 
       await expect(aiService.generateSummary('text')).rejects.toThrow('Failed to generate summary from AI service');
     });
