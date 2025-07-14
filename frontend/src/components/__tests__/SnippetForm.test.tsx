@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SnippetForm from '../SnippetForm';
 import { snippetService } from '../../services/snippetService';
@@ -15,22 +15,21 @@ describe('SnippetForm', () => {
     jest.clearAllMocks();
   });
 
-  it('should render form with title and content inputs', () => {
+  it('should render form with text input', () => {
     render(<SnippetForm onSnippetCreated={mockOnSnippetCreated} />);
     
-    expect(screen.getByLabelText(/title/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/content/i)).toBeInTheDocument();
+    expect(screen.getByLabelText('Text:')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /create snippet/i })).toBeInTheDocument();
   });
 
-  it('should show error when form is submitted with empty fields', async () => {
+  it('should show error when form is submitted with empty text', async () => {
     const user = userEvent.setup();
     render(<SnippetForm onSnippetCreated={mockOnSnippetCreated} />);
     
     const submitButton = screen.getByRole('button', { name: /create snippet/i });
     await user.click(submitButton);
     
-    expect(screen.getByText(/please fill in all fields/i)).toBeInTheDocument();
+    expect(screen.getByText(/please enter some text/i)).toBeInTheDocument();
     expect(mockOnSnippetCreated).not.toHaveBeenCalled();
   });
 
@@ -38,8 +37,7 @@ describe('SnippetForm', () => {
     const user = userEvent.setup();
     const mockSnippet = {
       id: '1',
-      title: 'Test Title',
-      content: 'Test Content',
+      text: 'Test Text',
       summary: 'Test Summary',
       createdAt: '2023-01-01T00:00:00Z',
       updatedAt: '2023-01-01T00:00:00Z'
@@ -49,18 +47,15 @@ describe('SnippetForm', () => {
     
     render(<SnippetForm onSnippetCreated={mockOnSnippetCreated} />);
     
-    const titleInput = screen.getByLabelText(/title/i);
-    const contentInput = screen.getByLabelText(/content/i);
+    const textInput = screen.getByLabelText('Text:');
     const submitButton = screen.getByRole('button', { name: /create snippet/i });
     
-    await user.type(titleInput, 'Test Title');
-    await user.type(contentInput, 'Test Content');
+    await user.type(textInput, 'Test Text');
     await user.click(submitButton);
     
     await waitFor(() => {
       expect(mockSnippetService.createSnippet).toHaveBeenCalledWith({
-        title: 'Test Title',
-        content: 'Test Content'
+        text: 'Test Text'
       });
       expect(mockOnSnippetCreated).toHaveBeenCalledWith(mockSnippet);
     });
@@ -73,16 +68,14 @@ describe('SnippetForm', () => {
       resolvePromise = resolve;
     });
     
-    mockSnippetService.createSnippet.mockReturnValue(promise);
+    mockSnippetService.createSnippet.mockReturnValue(promise as Promise<any>);
     
     render(<SnippetForm onSnippetCreated={mockOnSnippetCreated} />);
     
-    const titleInput = screen.getByLabelText(/title/i);
-    const contentInput = screen.getByLabelText(/content/i);
+    const textInput = screen.getByLabelText('Text:');
     const submitButton = screen.getByRole('button', { name: /create snippet/i });
     
-    await user.type(titleInput, 'Test Title');
-    await user.type(contentInput, 'Test Content');
+    await user.type(textInput, 'Test Text');
     await user.click(submitButton);
     
     expect(screen.getByText(/creating/i)).toBeInTheDocument();
@@ -90,8 +83,7 @@ describe('SnippetForm', () => {
     
     resolvePromise!({
       id: '1',
-      title: 'Test Title',
-      content: 'Test Content',
+      text: 'Test Text',
       summary: 'Test Summary',
       createdAt: '2023-01-01T00:00:00Z',
       updatedAt: '2023-01-01T00:00:00Z'
@@ -104,12 +96,10 @@ describe('SnippetForm', () => {
     
     render(<SnippetForm onSnippetCreated={mockOnSnippetCreated} />);
     
-    const titleInput = screen.getByLabelText(/title/i);
-    const contentInput = screen.getByLabelText(/content/i);
+    const textInput = screen.getByLabelText('Text:');
     const submitButton = screen.getByRole('button', { name: /create snippet/i });
     
-    await user.type(titleInput, 'Test Title');
-    await user.type(contentInput, 'Test Content');
+    await user.type(textInput, 'Test Text');
     await user.click(submitButton);
     
     await waitFor(() => {
@@ -123,8 +113,7 @@ describe('SnippetForm', () => {
     const user = userEvent.setup();
     const mockSnippet = {
       id: '1',
-      title: 'Test Title',
-      content: 'Test Content',
+      text: 'Test Text',
       summary: 'Test Summary',
       createdAt: '2023-01-01T00:00:00Z',
       updatedAt: '2023-01-01T00:00:00Z'
@@ -134,17 +123,14 @@ describe('SnippetForm', () => {
     
     render(<SnippetForm onSnippetCreated={mockOnSnippetCreated} />);
     
-    const titleInput = screen.getByLabelText(/title/i);
-    const contentInput = screen.getByLabelText(/content/i);
+    const textInput = screen.getByLabelText('Text:');
     const submitButton = screen.getByRole('button', { name: /create snippet/i });
     
-    await user.type(titleInput, 'Test Title');
-    await user.type(contentInput, 'Test Content');
+    await user.type(textInput, 'Test Text');
     await user.click(submitButton);
     
     await waitFor(() => {
-      expect(titleInput).toHaveValue('');
-      expect(contentInput).toHaveValue('');
+      expect(textInput).toHaveValue('');
     });
   });
 }); 

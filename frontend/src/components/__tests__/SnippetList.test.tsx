@@ -7,16 +7,14 @@ describe('SnippetList', () => {
   const mockSnippets: Snippet[] = [
     {
       id: '1',
-      title: 'First Snippet',
-      content: 'This is the first snippet content',
+      text: 'This is the first snippet text',
       summary: 'First snippet summary',
       createdAt: '2023-01-01T00:00:00Z',
       updatedAt: '2023-01-01T00:00:00Z'
     },
     {
       id: '2',
-      title: 'Second Snippet',
-      content: 'This is the second snippet content',
+      text: 'This is the second snippet text',
       summary: 'Second snippet summary',
       createdAt: '2023-01-02T00:00:00Z',
       updatedAt: '2023-01-02T00:00:00Z'
@@ -40,13 +38,11 @@ describe('SnippetList', () => {
     render(<SnippetList snippets={mockSnippets} />);
     
     // Check first snippet
-    expect(screen.getByText('First Snippet')).toBeInTheDocument();
-    expect(screen.getByText(/this is the first snippet content/i)).toBeInTheDocument();
+    expect(screen.getByText(/this is the first snippet text/i)).toBeInTheDocument();
     expect(screen.getByText(/first snippet summary/i)).toBeInTheDocument();
     
     // Check second snippet
-    expect(screen.getByText('Second Snippet')).toBeInTheDocument();
-    expect(screen.getByText(/this is the second snippet content/i)).toBeInTheDocument();
+    expect(screen.getByText(/this is the second snippet text/i)).toBeInTheDocument();
     expect(screen.getByText(/second snippet summary/i)).toBeInTheDocument();
   });
 
@@ -60,8 +56,8 @@ describe('SnippetList', () => {
   it('should render snippets in the order provided', () => {
     render(<SnippetList snippets={mockSnippets} />);
     
-    const snippetItems = screen.getAllByText(/snippet/i);
-    expect(snippetItems[0]).toHaveTextContent('First Snippet');
-    expect(snippetItems[1]).toHaveTextContent('Second Snippet');
+    const snippetItems = screen.getAllByText(/text:/i);
+    expect(snippetItems[0]).toHaveTextContent('This is the first snippet text');
+    expect(snippetItems[1]).toHaveTextContent('This is the second snippet text');
   });
 }); 

@@ -11,8 +11,7 @@ jest.mock('../../components/SnippetForm', () => {
       <div data-testid="snippet-form">
         <button onClick={() => onSnippetCreated({
           id: '1',
-          title: 'Test Snippet',
-          content: 'Test Content',
+          text: 'Test Snippet Text',
           summary: 'Test Summary',
           createdAt: '2023-01-01T00:00:00Z',
           updatedAt: '2023-01-01T00:00:00Z'
@@ -30,7 +29,7 @@ jest.mock('../../components/SnippetList', () => {
       <div data-testid="snippet-list">
         {snippets.map(snippet => (
           <div key={snippet.id} data-testid={`snippet-${snippet.id}`}>
-            {snippet.title}
+            {snippet.text}
           </div>
         ))}
       </div>
@@ -80,7 +79,7 @@ describe('HomePage', () => {
     createButton.click();
     
     expect(screen.getByTestId('snippet-1')).toBeInTheDocument();
-    expect(screen.getByText('Test Snippet')).toBeInTheDocument();
+    expect(screen.getByText('Test Snippet Text')).toBeInTheDocument();
   });
 
   it('should add multiple snippets to list', () => {
