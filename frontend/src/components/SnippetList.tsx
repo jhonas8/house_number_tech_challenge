@@ -20,8 +20,7 @@ const SnippetList: React.FC<SnippetListProps> = ({ snippets }) => {
       <h2>Snippets ({snippets.length})</h2>
       {snippets.map((snippet) => (
         <div key={snippet.id} className="snippet-item">
-          <h3>{snippet.title}</h3>
-          <p><strong>Content:</strong> {snippet.content}</p>
+          <p><strong>Text:</strong> {snippet.text}</p>
           <p><strong>Summary:</strong> {snippet.summary}</p>
           <small>Created: {new Date(snippet.createdAt).toLocaleString()}</small>
         </div>

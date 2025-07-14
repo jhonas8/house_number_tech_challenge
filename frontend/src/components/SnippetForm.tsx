@@ -7,15 +7,14 @@ interface SnippetFormProps {
 }
 
 const SnippetForm: React.FC<SnippetFormProps> = ({ onSnippetCreated }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !content.trim()) {
-      setError('Please fill in all fields');
+    if (!text.trim()) {
+      setError('Please enter some text');
       return;
     }
 
@@ -23,11 +22,10 @@ const SnippetForm: React.FC<SnippetFormProps> = ({ onSnippetCreated }) => {
     setError('');
 
     try {
-      const request: CreateSnippetRequest = { title, content };
+      const request: CreateSnippetRequest = { text };
       const snippet = await snippetService.createSnippet(request);
       onSnippetCreated(snippet);
-      setTitle('');
-      setContent('');
+      setText('');
     } catch (err) {
       setError('Failed to create snippet. Please try again.');
     } finally {
@@ -41,24 +39,14 @@ const SnippetForm: React.FC<SnippetFormProps> = ({ onSnippetCreated }) => {
       {error && <div className="error">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="title">Title:</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            disabled={isLoading}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="content">Content:</label>
+          <label htmlFor="text">Text:</label>
           <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            id="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
             disabled={isLoading}
-            rows={5}
+            rows={8}
+            placeholder="Enter your text here to get an AI-generated summary..."
             required
           />
         </div>
