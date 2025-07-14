@@ -3,10 +3,16 @@ import { AIService } from './aiService';
 import { CreateSnippetRequest, CreateSnippetResponse, GetSnippetResponse, ListSnippetsResponse } from '../types/snippet';
 
 export class SnippetService {
-  static async createSnippet(data: CreateSnippetRequest): Promise<CreateSnippetResponse> {
+  private aiService: AIService;
+
+  constructor(aiService?: AIService) {
+    this.aiService = aiService || new AIService();
+  }
+
+  async createSnippet(data: CreateSnippetRequest): Promise<CreateSnippetResponse> {
     try {
       // Generate AI summary
-      const summary = await AIService.generateSummary(data.text);
+      const summary = await this.aiService.generateSummary(data.text);
       
       // Create snippet in database
       const snippet = new Snippet({
@@ -28,7 +34,7 @@ export class SnippetService {
     }
   }
 
-  static async getSnippetById(id: string): Promise<GetSnippetResponse> {
+  async getSnippetById(id: string): Promise<GetSnippetResponse> {
     const snippet = await Snippet.findById(id);
     
     if (!snippet) {
@@ -43,7 +49,7 @@ export class SnippetService {
     };
   }
 
-  static async getAllSnippets(): Promise<ListSnippetsResponse> {
+  async getAllSnippets(): Promise<ListSnippetsResponse> {
     const snippets = await Snippet.find().sort({ createdAt: -1 });
     const total = await Snippet.countDocuments();
     

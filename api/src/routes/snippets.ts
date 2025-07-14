@@ -3,6 +3,7 @@ import { SnippetController } from '../controllers/snippetController';
 import { validateCreateSnippet, validateSnippetId } from '../middleware/validation';
 
 const router = Router();
+const snippetController = new SnippetController();
 
 /**
  * @swagger
@@ -42,7 +43,7 @@ const router = Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', validateCreateSnippet, SnippetController.createSnippet);
+router.post('/', validateCreateSnippet, snippetController.createSnippet.bind(snippetController));
 
 /**
  * @swagger
@@ -65,7 +66,7 @@ router.post('/', validateCreateSnippet, SnippetController.createSnippet);
  *       400:
  *         description: Invalid ID format
  */
-router.get('/:id', validateSnippetId, SnippetController.getSnippetById);
+router.get('/:id', validateSnippetId, snippetController.getSnippetById.bind(snippetController));
 
 /**
  * @swagger
@@ -97,6 +98,6 @@ router.get('/:id', validateSnippetId, SnippetController.getSnippetById);
  *                 total:
  *                   type: number
  */
-router.get('/', SnippetController.getAllSnippets);
+router.get('/', snippetController.getAllSnippets.bind(snippetController));
 
 export default router; 

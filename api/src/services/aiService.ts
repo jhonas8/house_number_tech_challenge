@@ -1,13 +1,25 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env['OPENAI_API_KEY']
-});
+export interface IAIClient {
+  chat: {
+    completions: {
+      create: (params: any) => Promise<any>;
+    };
+  };
+}
 
 export class AIService {
-  static async generateSummary(text: string): Promise<string> {
+  private client: IAIClient;
+
+  constructor(client?: IAIClient) {
+    this.client = client || new OpenAI({
+      apiKey: process.env['OPENAI_API_KEY']
+    });
+  }
+
+  async generateSummary(text: string): Promise<string> {
     try {
-      const completion = await openai.chat.completions.create({
+      const completion = await this.client.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
           {

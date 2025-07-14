@@ -3,10 +3,16 @@ import { SnippetService } from '../services/snippetService';
 import { CreateSnippetRequest } from '../types/snippet';
 
 export class SnippetController {
-  static async createSnippet(req: Request, res: Response, next: NextFunction) {
+  private snippetService: SnippetService;
+
+  constructor(snippetService?: SnippetService) {
+    this.snippetService = snippetService || new SnippetService();
+  }
+
+  async createSnippet(req: Request, res: Response, next: NextFunction) {
     try {
       const snippetData: CreateSnippetRequest = req.body;
-      const snippet = await SnippetService.createSnippet(snippetData);
+      const snippet = await this.snippetService.createSnippet(snippetData);
       
       res.status(201)
         .header('Location', `/snippets/${snippet.id}`)
@@ -16,7 +22,7 @@ export class SnippetController {
     }
   }
 
-  static async getSnippetById(req: Request, res: Response, next: NextFunction) {
+  async getSnippetById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id) {
@@ -27,7 +33,7 @@ export class SnippetController {
           timestamp: new Date().toISOString()
         });
       }
-      const snippet = await SnippetService.getSnippetById(id);
+      const snippet = await this.snippetService.getSnippetById(id);
       
       return res.json(snippet);
     } catch (error) {
@@ -35,9 +41,9 @@ export class SnippetController {
     }
   }
 
-  static async getAllSnippets(_req: Request, res: Response, next: NextFunction) {
+  async getAllSnippets(_req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await SnippetService.getAllSnippets();
+      const result = await this.snippetService.getAllSnippets();
       return res.json(result);
     } catch (error) {
       return next(error);
