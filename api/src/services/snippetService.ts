@@ -1,12 +1,13 @@
 import { Snippet } from '../models/Snippet';
-import { AIService } from './aiService';
+import { AIService } from '../aiServices/aiService';
+import { AiCompletion } from '../clients/AiCompletion';
 import { CreateSnippetRequest, CreateSnippetResponse, GetSnippetResponse, ListSnippetsResponse } from '../types/snippet';
 
 export class SnippetService {
   private aiService: AIService;
 
-  constructor(aiService?: AIService) {
-    this.aiService = aiService || new AIService();
+  constructor(aiClient: AiCompletion) {
+    this.aiService = new AIService(aiClient);
   }
 
   async createSnippet(data: CreateSnippetRequest): Promise<CreateSnippetResponse> {

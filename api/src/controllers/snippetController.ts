@@ -5,8 +5,8 @@ import { CreateSnippetRequest } from '../types/snippet';
 export class SnippetController {
   private snippetService: SnippetService;
 
-  constructor(snippetService?: SnippetService) {
-    this.snippetService = snippetService || new SnippetService();
+  constructor(snippetService: SnippetService) {
+    this.snippetService = snippetService;
   }
 
   async createSnippet(req: Request, res: Response, next: NextFunction) {

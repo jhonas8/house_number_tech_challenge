@@ -1,9 +1,13 @@
 import { Router } from 'express';
 import { SnippetController } from '../controllers/snippetController';
 import { validateCreateSnippet, validateSnippetId } from '../middleware/validation';
+import { OpenAiCompletionClient } from '../clients/OpenAiCompletionClient';
+import { SnippetService } from '../services/snippetService';
 
 const router = Router();
-const snippetController = new SnippetController();
+const aiClient = new OpenAiCompletionClient();
+const snippetService = new SnippetService(aiClient);
+const snippetController = new SnippetController(snippetService);
 
 /**
  * @swagger
