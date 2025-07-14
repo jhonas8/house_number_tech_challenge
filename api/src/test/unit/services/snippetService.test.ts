@@ -67,7 +67,7 @@ describe('SnippetService', () => {
 
       (mockAiCompletion.generateCompletion as jest.Mock).mockRejectedValue(new Error('AI service error'));
 
-      await expect(snippetService.createSnippet(snippetData)).rejects.toThrow('AI service error');
+      await expect(snippetService.createSnippet(snippetData)).rejects.toThrow('Failed to generate summary from AI service');
     });
 
     it('should throw error if database save fails', async () => {

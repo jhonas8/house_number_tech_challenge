@@ -4,14 +4,14 @@ import { AiCompletion } from './AiCompletion';
 export class OpenAiCompletionClient implements AiCompletion {
   private client: OpenAI;
   private smallModel: string;
-  private strongModel: string;
+  // private strongModel: string; // TODO: Implement when needed for different model selection
 
   constructor(apiKey?: string) {
     this.client = new OpenAI({
       apiKey: apiKey || process.env['OPENAI_API_KEY']
     });
     this.smallModel = process.env['OPENAI_SMALL_MODEL'] || "gpt-3.5-turbo";
-    this.strongModel = process.env['OPENAI_STRONG_MODEL'] || "gpt-4o";
+    // this.strongModel = process.env['OPENAI_STRONG_MODEL'] || "gpt-4o"; // TODO: Implement when needed
   }
 
   async generateCompletion(prompt: string): Promise<string> {

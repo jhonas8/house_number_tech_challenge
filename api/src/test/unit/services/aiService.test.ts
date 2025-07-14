@@ -1,8 +1,6 @@
 import { AIService } from '../../../aiServices/aiService';
 import { AiCompletion } from '../../../clients/AiCompletion';
 
-const mockCompletion = (summary: string) => summary;
-
 describe('AIService', () => {
   let mockClient: AiCompletion;
   let aiService: AIService;
