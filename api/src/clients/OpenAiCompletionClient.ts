@@ -3,16 +3,20 @@ import { AiCompletion } from './AiCompletion';
 
 export class OpenAiCompletionClient implements AiCompletion {
   private client: OpenAI;
+  private smallModel: string;
+  private strongModel: string;
 
   constructor(apiKey?: string) {
     this.client = new OpenAI({
       apiKey: apiKey || process.env['OPENAI_API_KEY']
     });
+    this.smallModel = process.env['OPENAI_SMALL_MODEL'] || "gpt-3.5-turbo";
+    this.strongModel = process.env['OPENAI_STRONG_MODEL'] || "gpt-4o";
   }
 
   async generateCompletion(prompt: string): Promise<string> {
     const completion = await this.client.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: this.smallModel,
       messages: [
         {
           role: "system",
