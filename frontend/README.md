@@ -136,16 +136,52 @@ docker build -t text-summarizer-frontend .
 docker run -p 3030:3030 text-summarizer-frontend
 ```
 
-### Docker Compose
+### Docker
 
-The frontend is included in the main `docker-compose.yml` file:
+#### Development with Hot Reload
+
+The project includes Docker setup for development with hot reload:
 
 ```bash
-# Start all services
+# Start all services in development mode (with hot reload)
 docker-compose up
 
-# Start only frontend
+# Start only frontend in development mode
 docker-compose up frontend
+
+# Rebuild and start
+docker-compose up --build
+```
+
+**Features:**
+- ✅ Hot reload enabled
+- ✅ Source code mounted as volumes
+- ✅ Real-time file changes
+- ✅ Fast development cycle
+
+#### Production
+
+For production deployment:
+
+```bash
+# Use production docker-compose
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+#### Docker Commands
+
+```bash
+# Build development image
+docker build -f Dockerfile.dev -t text-summarizer-frontend:dev .
+
+# Build production image
+docker build -f Dockerfile -t text-summarizer-frontend:prod .
+
+# Run development container
+docker run -p 3030:3030 -v $(pwd):/app text-summarizer-frontend:dev
+
+# Run production container
+docker run -p 3030:3030 text-summarizer-frontend:prod
 ```
 
 ## Development Guidelines

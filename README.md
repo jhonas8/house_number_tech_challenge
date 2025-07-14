@@ -22,6 +22,8 @@ An AI-powered text summarization service that allows users to paste raw text and
 
 ## Quick Start with Docker
 
+### Development with Hot Reload
+
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
@@ -34,16 +36,40 @@ An AI-powered text summarization service that allows users to paste raw text and
    # Edit .env and add your OpenAI API key
    ```
 
-3. **Run with Docker Compose**
+3. **Run with Docker Compose (Development)**
    ```bash
-   docker compose up --build
+   # Start all services with hot reload
+   docker-compose up --build
+   
+   # Or start only frontend with hot reload
+   docker-compose -f docker-compose.frontend.yml up
    ```
 
    This will:
    - Start MongoDB on port 27017
    - Start the API server on port 3000
-   - Start the React frontend on port 3030
+   - Start the React frontend on port 3030 with hot reload
    - Run tests automatically
+
+### Production
+
+For production deployment:
+```bash
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+### Hot Reload Demo
+
+Run the demo script to see hot reload in action:
+```bash
+./demo-hot-reload.sh
+```
+
+**Features:**
+- ✅ Hot reload enabled for frontend development
+- ✅ Source code mounted as volumes
+- ✅ Real-time file changes
+- ✅ Fast development cycle
 
 ## Local Development
 
