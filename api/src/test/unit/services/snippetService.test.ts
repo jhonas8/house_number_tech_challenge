@@ -1,7 +1,7 @@
 import { SnippetService } from '../../../services/snippetService';
-import { AIService } from '../../../services/aiService';
 import { Snippet } from '../../../models/Snippet';
 import { CreateSnippetRequest } from '../../../types/snippet';
+import { AiCompletion } from '../../../clients/AiCompletion';
 
 // Mock the Snippet model
 jest.mock('../../../models/Snippet');
@@ -17,17 +17,17 @@ const mockSnippet = {
 const mockSnippetModel = Snippet as any;
 
 describe('SnippetService', () => {
-  let mockAIService: jest.Mocked<AIService>;
+  let mockAiCompletion: jest.Mocked<AiCompletion>;
   let snippetService: SnippetService;
 
   beforeEach(() => {
     jest.clearAllMocks();
     
-    mockAIService = {
-      generateSummary: jest.fn()
+    mockAiCompletion = {
+      generateCompletion: jest.fn()
     } as any;
 
-    snippetService = new SnippetService(mockAIService);
+    snippetService = new SnippetService(mockAiCompletion);
   });
 
   describe('createSnippet', () => {
@@ -39,12 +39,14 @@ describe('SnippetService', () => {
       const aiSummary = 'Test snippet summary';
       const savedSnippet = { ...mockSnippet, save: jest.fn().mockResolvedValue(mockSnippet) };
       
-      mockAIService.generateSummary.mockResolvedValue(aiSummary);
+      (mockAiCompletion.generateCompletion as jest.Mock).mockResolvedValue(aiSummary);
       mockSnippetModel.mockImplementation(() => savedSnippet as any);
 
       const result = await snippetService.createSnippet(snippetData);
 
-      expect(mockAIService.generateSummary).toHaveBeenCalledWith(snippetData.text);
+      expect(mockAiCompletion.generateCompletion).toHaveBeenCalledWith(
+        'Summarize the following text in 30 words or less: This is a test snippet that needs summarization.'
+      );
       expect(mockSnippetModel).toHaveBeenCalledWith({
         text: snippetData.text,
         summary: aiSummary
@@ -63,7 +65,7 @@ describe('SnippetService', () => {
         text: 'Test text'
       };
 
-      mockAIService.generateSummary.mockRejectedValue(new Error('AI service error'));
+      (mockAiCompletion.generateCompletion as jest.Mock).mockRejectedValue(new Error('AI service error'));
 
       await expect(snippetService.createSnippet(snippetData)).rejects.toThrow('AI service error');
     });
@@ -75,7 +77,7 @@ describe('SnippetService', () => {
       
       const savedSnippet = { ...mockSnippet, save: jest.fn().mockRejectedValue(new Error('DB error')) };
       
-      mockAIService.generateSummary.mockResolvedValue('Summary');
+      (mockAiCompletion.generateCompletion as jest.Mock).mockResolvedValue('Summary');
       mockSnippetModel.mockImplementation(() => savedSnippet as any);
 
       await expect(snippetService.createSnippet(snippetData)).rejects.toThrow('DB error');
