@@ -2,10 +2,16 @@ import { Router } from 'express';
 import { SnippetController } from '../controllers/snippetController';
 import { validateCreateSnippet, validateSnippetId } from '../middleware/validation';
 import { OpenAiCompletionClient } from '../clients/OpenAiCompletionClient';
+import { MockAiCompletionClient } from '../clients/MockAiCompletionClient';
 import { SnippetService } from '../services/snippetService';
 
 const router = Router();
-const aiClient = new OpenAiCompletionClient();
+
+// Use mock client in test environment, real client in production
+const aiClient = process.env['NODE_ENV'] === 'test' 
+  ? new MockAiCompletionClient()
+  : new OpenAiCompletionClient();
+
 const snippetService = new SnippetService(aiClient);
 const snippetController = new SnippetController(snippetService);
 

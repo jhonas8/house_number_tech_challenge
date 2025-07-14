@@ -6,7 +6,7 @@ export class CastErrorHandler extends BaseErrorHandler {
     return error.name === 'CastError';
   }
 
-  handle(error: Error, req: Request, res: Response): void {
+  handle(_error: Error, _req: Request, res: Response): void {
     const response = this.createErrorResponse(
       'Bad Request',
       'Invalid ID format',

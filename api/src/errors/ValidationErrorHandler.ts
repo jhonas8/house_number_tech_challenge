@@ -6,7 +6,7 @@ export class ValidationErrorHandler extends BaseErrorHandler {
     return error.name === 'ValidationError';
   }
 
-  handle(error: Error, req: Request, res: Response): void {
+  handle(error: Error, _req: Request, res: Response): void {
     const response = this.createErrorResponse(
       'Validation Error',
       error.message,

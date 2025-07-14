@@ -6,7 +6,7 @@ export class AIServiceErrorHandler extends BaseErrorHandler {
     return error.message.includes('Failed to generate summary');
   }
 
-  handle(error: Error, req: Request, res: Response): void {
+  handle(_error: Error, _req: Request, res: Response): void {
     const response = this.createErrorResponse(
       'Service Unavailable',
       'AI service is currently unavailable',

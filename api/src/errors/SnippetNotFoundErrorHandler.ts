@@ -6,7 +6,7 @@ export class SnippetNotFoundErrorHandler extends BaseErrorHandler {
     return error.message === 'Snippet not found';
   }
 
-  handle(error: Error, req: Request, res: Response): void {
+  handle(_error: Error, _req: Request, res: Response): void {
     const response = this.createErrorResponse(
       'Not Found',
       'Snippet not found',
