@@ -89,7 +89,7 @@ export default function HomePage() {
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-slate-900">Text Summarizer 🚀 HOT RELOAD TEST</h1>
+          <h1 className="text-4xl font-bold text-slate-900">Text Summarizer 🚀 SIMPLIFIED DOCKER!</h1>
           <p className="text-slate-600">Paste your text and get AI-powered summaries instantly</p>
         </div>
 

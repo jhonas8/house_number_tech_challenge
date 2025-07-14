@@ -2,28 +2,28 @@
 
 ## ✅ What We've Implemented
 
-### 1. Docker Development Setup
-- **`Dockerfile.dev`**: Development-specific Dockerfile for frontend
-- **`docker-compose.frontend.yml`**: Frontend-only compose file for development
-- **`docker-compose.prod.yml`**: Production compose file
-- **Updated `docker-compose.yml`**: Main compose file with hot reload volumes
+### 1. Simplified Docker Setup
+- **Single `docker-compose.yml`**: One file for all environments
+- **Docker profiles**: `dev` and `prod` profiles for different modes
+- **Hot reload volumes**: Source code mounted for development
+- **Automatic tests**: Tests run before starting services
 
 ### 2. Hot Reload Configuration
 - **Volume Mounts**: Source code mounted to `/app` in container
 - **Excluded Directories**: `node_modules` and `.next` excluded to avoid conflicts
-- **Environment Variables**: Development-specific settings
+- **Environment Variables**: Configurable via profiles
 - **Port Mapping**: Frontend accessible on `localhost:3030`
 
 ### 3. Development Workflow
 ```bash
-# Start frontend with hot reload
-docker-compose -f docker-compose.frontend.yml up
+# Development mode (with hot reload)
+docker-compose --profile dev up --build
 
-# Start all services with hot reload
-docker-compose up
+# Production mode
+docker-compose --profile prod up --build
 
-# Production deployment
-docker-compose -f docker-compose.prod.yml up --build
+# Start only frontend with hot reload
+docker-compose --profile dev up frontend
 ```
 
 ### 4. Hot Reload Features
@@ -48,40 +48,36 @@ docker-compose -f docker-compose.prod.yml up --build
 
 ```
 house_number_tech_challenge/
-├── docker-compose.yml              # Main compose (dev mode)
-├── docker-compose.frontend.yml     # Frontend-only (dev mode)
-├── docker-compose.prod.yml         # Production compose
+├── docker-compose.yml              # Single compose file with profiles
 ├── frontend/
-│   ├── Dockerfile                  # Production Dockerfile
-│   ├── Dockerfile.dev              # Development Dockerfile
+│   ├── Dockerfile                  # Multi-stage Dockerfile
 │   └── src/                        # Source code (mounted as volume)
-├── demo-hot-reload.sh              # Hot reload demo
-└── test-hot-reload.sh              # Hot reload test
+└── api/
+    ├── Dockerfile                  # API Dockerfile
+    └── src/                        # Source code (mounted as volume)
 ```
 
 ## 🚀 Usage Examples
 
-### Basic Development
+### Development Mode
 ```bash
-# Start frontend with hot reload
-docker-compose -f docker-compose.frontend.yml up
+# Start all services with hot reload
+docker-compose --profile dev up --build
 
 # Make changes to frontend/src/app/page.tsx
 # Changes will automatically appear in browser
 ```
 
-### Full Stack Development
-```bash
-# Start all services with hot reload
-docker-compose up
-
-# Frontend hot reload + Backend + Database
-```
-
-### Production
+### Production Mode
 ```bash
 # Production deployment
-docker-compose -f docker-compose.prod.yml up --build
+docker-compose --profile prod up --build
+```
+
+### Frontend Only
+```bash
+# Start only frontend with hot reload
+docker-compose --profile dev up frontend
 ```
 
 ## 🎯 Benefits
@@ -97,19 +93,19 @@ docker-compose -f docker-compose.prod.yml up --build
 ### Container Not Starting
 ```bash
 # Check logs
-docker-compose -f docker-compose.frontend.yml logs frontend
+docker-compose --profile dev logs frontend
 
 # Rebuild and restart
-docker-compose -f docker-compose.frontend.yml up --build
+docker-compose --profile dev up --build
 ```
 
 ### Hot Reload Not Working
 ```bash
 # Check volume mounts
-docker inspect snippet-frontend-dev
+docker inspect snippet-frontend
 
 # Restart container
-docker-compose -f docker-compose.frontend.yml restart frontend
+docker-compose --profile dev restart frontend
 ```
 
 ### Port Conflicts
@@ -118,7 +114,7 @@ docker-compose -f docker-compose.frontend.yml restart frontend
 docker-compose down
 
 # Start fresh
-docker-compose -f docker-compose.frontend.yml up
+docker-compose --profile dev up
 ```
 
 ## 📝 Next Steps

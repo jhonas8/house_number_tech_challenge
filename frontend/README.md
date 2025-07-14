@@ -138,50 +138,37 @@ docker run -p 3030:3030 text-summarizer-frontend
 
 ### Docker
 
-#### Development with Hot Reload
-
-The project includes Docker setup for development with hot reload:
+The project uses a single docker-compose file with profiles for different environments:
 
 ```bash
-# Start all services in development mode (with hot reload)
-docker-compose up
+# Development mode (with hot reload)
+docker-compose --profile dev up --build
+
+# Production mode
+docker-compose --profile prod up --build
 
 # Start only frontend in development mode
-docker-compose up frontend
-
-# Rebuild and start
-docker-compose up --build
+docker-compose --profile dev up frontend
 ```
 
 **Features:**
-- ✅ Hot reload enabled
+- ✅ Hot reload enabled for development
 - ✅ Source code mounted as volumes
 - ✅ Real-time file changes
-- ✅ Fast development cycle
-
-#### Production
-
-For production deployment:
-
-```bash
-# Use production docker-compose
-docker-compose -f docker-compose.prod.yml up --build
-```
+- ✅ Tests run automatically before starting
+- ✅ Single docker-compose file for all environments
 
 #### Docker Commands
 
 ```bash
-# Build development image
-docker build -f Dockerfile.dev -t text-summarizer-frontend:dev .
+# Build and run development
+docker-compose --profile dev up --build
 
-# Build production image
-docker build -f Dockerfile -t text-summarizer-frontend:prod .
+# Build and run production
+docker-compose --profile prod up --build
 
-# Run development container
-docker run -p 3030:3030 -v $(pwd):/app text-summarizer-frontend:dev
-
-# Run production container
-docker run -p 3030:3030 text-summarizer-frontend:prod
+# Run only frontend with hot reload
+docker-compose --profile dev up frontend
 ```
 
 ## Development Guidelines

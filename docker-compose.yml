@@ -27,6 +27,56 @@ services:
     container_name: snippet-api
     restart: unless-stopped
     environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3000
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/snippets?authSource=admin
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - snippet-network
+    command: sh -c "cd /app && npm test && npm start"
+    volumes:
+      # Mount source code for hot reload in development
+      - ./api:/app
+      - /app/node_modules
+    profiles:
+      - dev
+
+  # Next.js Frontend
+  frontend:
+    build: ./frontend
+    container_name: snippet-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3030
+      HOSTNAME: "0.0.0.0"
+    ports:
+      - "3030:3030"
+    volumes:
+      # Mount source code for hot reload in development
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - api
+    networks:
+      - snippet-network
+    command: sh -c "cd /app && npm test && npm run dev"
+    profiles:
+      - dev
+
+  # Production API (no hot reload)
+  api-prod:
+    build: ./api
+    container_name: snippet-api-prod
+    restart: unless-stopped
+    environment:
       NODE_ENV: production
       PORT: 3000
       MONGODB_URI: mongodb://admin:password@mongodb:27017/snippets?authSource=admin
@@ -39,30 +89,27 @@ services:
     networks:
       - snippet-network
     command: sh -c "cd /app && npm test && npm start"
+    profiles:
+      - prod
 
-  # Next.js Frontend (Development)
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    container_name: snippet-frontend
+  # Production Frontend (no hot reload)
+  frontend-prod:
+    build: ./frontend
+    container_name: snippet-frontend-prod
     restart: unless-stopped
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:3000
-      NODE_ENV: development
+      NODE_ENV: production
+      PORT: 3030
     ports:
       - "3030:3030"
-    volumes:
-      # Mount source code for hot reload
-      - ./frontend:/app
-      # Exclude node_modules to avoid conflicts
-      - /app/node_modules
-      # Exclude .next build directory
-      - /app/.next
     depends_on:
-      - api
+      - api-prod
     networks:
       - snippet-network
+    command: sh -c "cd /app && npm test && npm start"
+    profiles:
+      - prod
 
 volumes:
   mongodb_data:
