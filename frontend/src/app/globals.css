@@ -51,7 +51,7 @@
 
 @layer base {
   body {
-    background-color: white;
-    color: #111827;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }

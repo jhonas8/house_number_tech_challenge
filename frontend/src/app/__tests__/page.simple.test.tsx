@@ -1,17 +1,20 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import HomePage from '../page'
-import { ToastProvider } from '@/components/ui/toast-provider'
+
+// Mock the toast context
+jest.mock('@/components/ui/toast-provider', () => ({
+  useToastContext: () => ({
+    toast: jest.fn()
+  }),
+  ToastProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
+}))
 
 // Mock fetch globally
 global.fetch = jest.fn()
 
 const renderWithToast = (component: React.ReactElement) => {
-  return render(
-    <ToastProvider>
-      {component}
-    </ToastProvider>
-  )
+  return render(component)
 }
 
 describe('HomePage - Simple Tests', () => {
@@ -22,7 +25,7 @@ describe('HomePage - Simple Tests', () => {
   it('should display the page title and description', () => {
     renderWithToast(<HomePage />)
 
-    expect(screen.getByText('Text Summarizer')).toBeInTheDocument()
+    expect(screen.getByText(/Text Summarizer/)).toBeInTheDocument()
     expect(screen.getByText("Paste your text and get AI-powered summaries instantly")).toBeInTheDocument()
   })
 

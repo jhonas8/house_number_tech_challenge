@@ -11,11 +11,23 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
+# Test stage - run tests before building
+FROM base AS test
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Run tests before building
+RUN npm test
+
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Ensure tests passed before building
+COPY --from=test /app/coverage ./coverage
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -56,4 +68,4 @@ ENV HOSTNAME "0.0.0.0"
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["sh", "-c", "npm test && node server.js"] 
+CMD ["node", "server.js"] 

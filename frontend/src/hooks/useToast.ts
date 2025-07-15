@@ -35,7 +35,7 @@ export function useToast() {
     // Auto-dismiss if duration is set
     if (newToast.duration !== null) {
       setTimeout(() => {
-        dismiss(id)
+        setToasts(prev => prev.filter(toast => toast.id !== id))
       }, newToast.duration)
     }
   }, [])
