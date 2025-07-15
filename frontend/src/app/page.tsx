@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -18,17 +18,13 @@ export default function HomePage() {
   const [isCreating, setIsCreating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToastContext()
-  const snippetService = new SnippetService(API_BASE_URL)
+  const snippetService = useMemo(() => new SnippetService(API_BASE_URL), [])
 
-  useEffect(() => {
-    fetchSnippets()
-  }, [])
-
-  const fetchSnippets = async () => {
+  const fetchSnippets = useCallback(async () => {
     try {
       const response = await snippetService.getAllSnippets()
       setSnippets(response.snippets || [])
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to load snippets",
@@ -37,7 +33,11 @@ export default function HomePage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [snippetService, toast])
+
+  useEffect(() => {
+    fetchSnippets()
+  }, [fetchSnippets])
 
   const createSnippet = async () => {
     if (!text.trim()) {
@@ -100,7 +100,7 @@ export default function HomePage() {
               <Plus className="h-5 w-5" />
               Create New Snippet
             </CardTitle>
-            <CardDescription>Enter your text below and we'll generate a concise summary using AI</CardDescription>
+            <CardDescription>Enter your text below and we&apos;ll generate a concise summary using AI</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Textarea

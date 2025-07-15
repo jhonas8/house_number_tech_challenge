@@ -47,7 +47,6 @@ describe('SnippetService', () => {
     })
 
     it('should throw error when API call fails', async () => {
-      const errorMessage = 'Failed to fetch snippets'
       ;(fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
         status: 500,

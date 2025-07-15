@@ -1,4 +1,6 @@
-import { useState, useCallback, useEffect } from 'react'
+"use client"
+
+import { useState, useCallback } from 'react'
 
 export interface Toast {
   id: string

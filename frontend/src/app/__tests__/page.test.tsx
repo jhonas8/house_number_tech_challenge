@@ -1,12 +1,9 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import HomePage from '../page'
 import { ToastProvider } from '@/components/ui/toast-provider'
-import { SnippetService } from '@/services/snippetService'
-
 // Mock the SnippetService
 jest.mock('@/services/snippetService')
-const MockSnippetService = SnippetService as jest.MockedClass<typeof SnippetService>
 
 // Mock fetch globally
 global.fetch = jest.fn()
@@ -20,11 +17,8 @@ const renderWithToast = (component: React.ReactElement) => {
 }
 
 describe('HomePage', () => {
-  let mockSnippetService: jest.Mocked<SnippetService>
-
   beforeEach(() => {
     jest.clearAllMocks()
-    mockSnippetService = new MockSnippetService('http://localhost:3000') as jest.Mocked<SnippetService>
   })
 
   describe('Initial Load', () => {
