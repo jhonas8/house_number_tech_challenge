@@ -107,12 +107,12 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 p-4">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-foreground">Text Summarizer</h1>
-          <p className="text-muted-foreground">Paste your text and get AI-powered summaries instantly</p>
+          <h1 className="text-4xl font-bold text-gray-900">Text Summarizer</h1>
+          <p className="text-gray-600">Paste your text and get AI-powered summaries instantly</p>
         </div>
 
         {/* Create Snippet Form */}
@@ -133,7 +133,7 @@ export default function Home() {
               maxLength={10000}
             />
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{text.length}/10,000 characters</span>
+              <span className="text-sm text-gray-500">{text.length}/10,000 characters</span>
               <Button onClick={createSnippet} disabled={isCreating || !text.trim()} className="min-w-[120px]">
                 {isCreating ? (
                   <>
@@ -152,19 +152,19 @@ export default function Home() {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            <h2 className="text-2xl font-semibold text-foreground">Your Snippets ({snippets.length})</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">Your Snippets ({snippets.length})</h2>
           </div>
 
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
             </div>
           ) : snippets.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <FileText className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-muted-foreground mb-2">No snippets yet</h3>
-                <p className="text-muted-foreground">Create your first snippet by pasting some text above</p>
+                <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-600 mb-2">No snippets yet</h3>
+                <p className="text-gray-500">Create your first snippet by pasting some text above</p>
               </CardContent>
             </Card>
           ) : (
@@ -177,9 +177,9 @@ export default function Home() {
                         <Badge variant="secondary" className="text-xs">
                           Summary
                         </Badge>
-                        <p className="text-sm font-medium text-foreground">{snippet.summary}</p>
+                        <p className="text-sm font-medium text-gray-900">{snippet.summary}</p>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1 text-xs text-gray-500">
                         <Clock className="h-3 w-3" />
                         {formatDate(snippet.createdAt)}
                       </div>
@@ -187,8 +187,8 @@ export default function Home() {
                   </CardHeader>
                   <CardContent className="pt-0">
                     <div className="space-y-2">
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Original Text</p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{truncateText(snippet.text)}</p>
+                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Original Text</p>
+                      <p className="text-sm text-gray-600 leading-relaxed">{truncateText(snippet.text)}</p>
                       {snippet.text.length > 200 && (
                         <Button
                           variant="ghost"
