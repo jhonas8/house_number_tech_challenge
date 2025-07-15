@@ -1,120 +1,120 @@
-# Docker Setup Simplificado - Resumo Final
+# Simplified Docker Setup - Final Summary
 
-## ✅ O que foi implementado
+## ✅ What was implemented
 
-### 1. **Um único docker-compose.yml**
-- ✅ Todos os serviços em um arquivo
-- ✅ Perfis `dev` e `prod` para diferentes ambientes
-- ✅ Hot reload configurado para desenvolvimento
-- ✅ Testes automáticos antes de iniciar serviços
+### 1. **Single docker-compose.yml**
+- ✅ All services in one file
+- ✅ `dev` and `prod` profiles for different environments
+- ✅ Hot reload configured for development
+- ✅ Automatic tests before starting services
 
-### 2. **Serviços configurados**
-- **MongoDB**: Banco de dados na porta 27017
-- **API**: Backend Express na porta 3000 (com testes)
-- **Frontend**: Next.js na porta 3030 (com hot reload + testes)
+### 2. **Configured services**
+- **MongoDB**: Database on port 27017
+- **API**: Express backend on port 3000 (with tests)
+- **Frontend**: Next.js on port 3030 (with hot reload + tests)
 
-### 3. **Comandos simplificados**
+### 3. **Simplified commands**
 ```bash
-# Desenvolvimento (com hot reload)
+# Development (with hot reload)
 docker-compose --profile dev up --build
 
-# Produção
+# Production
 docker-compose --profile prod up --build
 
-# Apenas frontend com hot reload
+# Frontend only with hot reload
 docker-compose --profile dev up frontend
 ```
 
-## 🚀 Como usar
+## 🚀 How to use
 
-### Desenvolvimento
+### Development
 ```bash
-# Inicia todos os serviços com hot reload
+# Start all services with hot reload
 docker-compose --profile dev up --build
 
-# Faça mudanças nos arquivos do frontend
-# As mudanças aparecem automaticamente no navegador
+# Make changes to frontend files
+# Changes appear automatically in the browser
 ```
 
-### Produção
+### Production
 ```bash
-# Deploy em produção
+# Deploy to production
 docker-compose --profile prod up --build
 ```
 
-## 🔧 Funcionalidades
+## 🔧 Features
 
 ### Hot Reload
-- ✅ **Volume mounting**: Código fonte montado em `/app`
-- ✅ **File watching**: Next.js monitora mudanças
-- ✅ **Auto-reload**: Browser atualiza automaticamente
-- ✅ **Fast development**: Sem rebuild de containers
+- ✅ **Volume mounting**: Source code mounted at `/app`
+- ✅ **File watching**: Next.js monitors changes
+- ✅ **Auto-reload**: Browser updates automatically
+- ✅ **Fast development**: No container rebuilds
 
-### Testes Automáticos
-- ✅ **API tests**: Rodam antes de iniciar a API
-- ✅ **Frontend tests**: Rodam antes de iniciar o frontend
-- ✅ **Fail fast**: Se testes falharem, serviço não inicia
+### Automatic Tests
+- ✅ **API tests**: Run before starting the API
+- ✅ **Frontend tests**: Run before starting the frontend
+- ✅ **Fail fast**: If tests fail, service doesn't start
 
-### Ambientes
-- ✅ **Development**: Hot reload + volumes + testes
-- ✅ **Production**: Build otimizado + testes
+### Environments
+- ✅ **Development**: Hot reload + volumes + tests
+- ✅ **Production**: Optimized build + tests
 
-## 📁 Estrutura final
+## 📁 Final structure
 
 ```
 house_number_tech_challenge/
-├── docker-compose.yml          # Único arquivo para todos os ambientes
+├── docker-compose.yml          # Single file for all environments
 ├── frontend/
-│   ├── Dockerfile              # Multi-stage para produção
-│   └── src/                    # Código fonte (mounted como volume)
+│   ├── Dockerfile              # Multi-stage for production
+│   └── src/                    # Source code (mounted as volume)
 ├── api/
 │   ├── Dockerfile              # API Dockerfile
-│   └── src/                    # Código fonte (mounted como volume)
-└── README.md                   # Documentação atualizada
+│   └── src/                    # Source code (mounted as volume)
+└── README.md                   # Updated documentation
 ```
 
-## 🎯 Benefícios da simplificação
+## 🎯 Benefits of simplification
 
-1. **Simplicidade**: Um arquivo para todos os ambientes
-2. **Clareza**: Comandos simples e intuitivos
-3. **Manutenibilidade**: Menos arquivos para manter
-4. **Consistência**: Mesmo setup em todos os ambientes
-5. **Flexibilidade**: Perfis permitem diferentes configurações
+1. **Simplicity**: One file for all environments
+2. **Clarity**: Simple and intuitive commands
+3. **Maintainability**: Fewer files to maintain
+4. **Consistency**: Same setup across all environments
+5. **Flexibility**: Profiles allow different configurations
 
 ## 🔍 Troubleshooting
 
-### Container não inicia
+### Container won't start
 ```bash
-# Ver logs
+# View logs
 docker-compose --profile dev logs
 
-# Rebuild e reiniciar
+# Rebuild and restart
 docker-compose --profile dev up --build
 ```
 
-### Hot reload não funciona
+### Hot reload not working
 ```bash
-# Verificar volumes
+# Check volumes
 docker inspect snippet-frontend
 
-# Reiniciar frontend
+# Restart frontend
 docker-compose --profile dev restart frontend
 ```
 
-### Testes falhando
+### Tests failing
 ```bash
-# Ver logs dos testes
+# View test logs
 docker-compose --profile dev logs api
 docker-compose --profile dev logs frontend
 ```
 
-## 📝 Próximos passos
+## 📝 Next steps
 
-1. **Teste o hot reload**: Faça mudanças nos arquivos e veja atualizações automáticas
-2. **Desenvolva**: Use `docker-compose --profile dev up` para desenvolvimento
-3. **Deploy**: Use `docker-compose --profile prod up` para produção
-4. **Mantenha**: Um arquivo, múltiplos ambientes, fácil manutenção
+1. **Test hot reload**: Make changes to files and see automatic updates
+2. **Develop**: Use `docker-compose --profile dev up` for development
+3. **Deploy**: Use `docker-compose --profile prod up` for production
+4. **Maintain**: One file, multiple environments, easy maintenance
 
 ---
 
-**🎉 Docker setup simplificado e funcionando perfeitamente!** 
+**🎉 Docker setup simplified and working perfectly!** 
