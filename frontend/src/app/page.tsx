@@ -1,31 +1,44 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, Plus, FileText, Clock } from "lucide-react"
-import { useToastContext } from "@/components/ui/toast-provider"
-import { SnippetService } from "@/services/snippetService"
-import { Snippet } from "@/types/snippet"
+import { useToast } from "@/hooks/useToast"
+
+interface Snippet {
+  id: string
+  text: string
+  summary: string
+  createdAt: string
+  updatedAt: string
+}
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
 
-export default function HomePage() {
+export default function Home() {
   const [text, setText] = useState("")
   const [snippets, setSnippets] = useState<Snippet[]>([])
   const [isCreating, setIsCreating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const { toast } = useToastContext()
-  
-  const snippetService = useMemo(() => new SnippetService(API_BASE_URL), [])
+  const { toast } = useToast()
 
-  const fetchSnippets = useCallback(async () => {
+  useEffect(() => {
+    fetchSnippets()
+  }, [])
+
+  const fetchSnippets = async () => {
     try {
-      const response = await snippetService.getAllSnippets()
-      setSnippets(response.snippets || [])
-    } catch {
+      const response = await fetch(`${API_BASE_URL}/snippets`)
+      if (response.ok) {
+        const data = await response.json()
+        setSnippets(data.snippets || [])
+      } else {
+        throw new Error("Failed to fetch snippets")
+      }
+    } catch (error) {
       toast({
         title: "Error",
         description: "Failed to load snippets",
@@ -34,11 +47,7 @@ export default function HomePage() {
     } finally {
       setIsLoading(false)
     }
-  }, [snippetService, toast])
-
-  useEffect(() => {
-    fetchSnippets()
-  }, [fetchSnippets])
+  }
 
   const createSnippet = async () => {
     if (!text.trim()) {
@@ -52,18 +61,30 @@ export default function HomePage() {
 
     setIsCreating(true)
     try {
-      const newSnippet = await snippetService.createSnippet({ text: text.trim() })
-      setSnippets((prev) => [newSnippet, ...prev])
-      setText("")
-      toast({
-        title: "Success",
-        description: "Snippet created and summarized!",
-        variant: "success",
+      const response = await fetch(`${API_BASE_URL}/snippets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: text.trim() }),
       })
-    } catch {
+
+      if (response.ok) {
+        const newSnippet = await response.json()
+        setSnippets((prev) => [newSnippet, ...prev])
+        setText("")
+        toast({
+          title: "Success",
+          description: "Snippet created and summarized!",
+        })
+      } else {
+        const error = await response.json()
+        throw new Error(error.error || "Failed to create snippet")
+      }
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to create snippet",
+        description: error instanceof Error ? error.message : "Failed to create snippet",
         variant: "destructive",
       })
     } finally {
@@ -86,12 +107,12 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-slate-900">Text Summarizer 🚀 SIMPLIFIED DOCKER!</h1>
-          <p className="text-slate-600">Paste your text and get AI-powered summaries instantly</p>
+          <h1 className="text-4xl font-bold text-foreground">Text Summarizer</h1>
+          <p className="text-muted-foreground">Paste your text and get AI-powered summaries instantly</p>
         </div>
 
         {/* Create Snippet Form */}
@@ -101,7 +122,7 @@ export default function HomePage() {
               <Plus className="h-5 w-5" />
               Create New Snippet
             </CardTitle>
-            <CardDescription>Enter your text below and we&apos;ll generate a concise summary using AI</CardDescription>
+            <CardDescription>Enter your text below and we'll generate a concise summary using AI</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Textarea
@@ -112,7 +133,7 @@ export default function HomePage() {
               maxLength={10000}
             />
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">{text.length}/10,000 characters</span>
+              <span className="text-sm text-muted-foreground">{text.length}/10,000 characters</span>
               <Button onClick={createSnippet} disabled={isCreating || !text.trim()} className="min-w-[120px]">
                 {isCreating ? (
                   <>
@@ -131,24 +152,24 @@ export default function HomePage() {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            <h2 className="text-2xl font-semibold text-slate-900">Your Snippets ({snippets.length})</h2>
+            <h2 className="text-2xl font-semibold text-foreground">Your Snippets ({snippets.length})</h2>
           </div>
 
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : snippets.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <FileText className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-600 mb-2">No snippets yet</h3>
-                <p className="text-slate-500">Create your first snippet by pasting some text above</p>
+                <FileText className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-muted-foreground mb-2">No snippets yet</h3>
+                <p className="text-muted-foreground">Create your first snippet by pasting some text above</p>
               </CardContent>
             </Card>
           ) : (
             <div className="grid gap-4">
-              {snippets.filter(Boolean).map((snippet) => (
+              {snippets.map((snippet) => (
                 <Card key={snippet.id} className="hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -156,9 +177,9 @@ export default function HomePage() {
                         <Badge variant="secondary" className="text-xs">
                           Summary
                         </Badge>
-                        <p className="text-sm font-medium text-slate-900">{snippet.summary}</p>
+                        <p className="text-sm font-medium text-foreground">{snippet.summary}</p>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-slate-500">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         {formatDate(snippet.createdAt)}
                       </div>
@@ -166,13 +187,13 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent className="pt-0">
                     <div className="space-y-2">
-                      <p className="text-xs font-medium text-slate-600 uppercase tracking-wide">Original Text</p>
-                      <p className="text-sm text-slate-700 leading-relaxed">{truncateText(snippet.text)}</p>
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Original Text</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{truncateText(snippet.text)}</p>
                       {snippet.text.length > 200 && (
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-auto p-0 text-xs text-blue-600 hover:text-blue-800"
+                          className="h-auto p-0 text-xs text-primary hover:text-primary/80"
                           onClick={() => {
                             // In a real app, this would open a modal or navigate to a detail page
                             alert(`Full text:\n\n${snippet.text}`)
