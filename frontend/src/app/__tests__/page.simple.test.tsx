@@ -22,25 +22,46 @@ describe('HomePage - Simple Tests', () => {
     jest.clearAllMocks()
   })
 
-  it('should display the page title and description', () => {
+  it('should display the page title and description', async () => {
+    ;(fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ snippets: [], total: 0 })
+    })
+
     renderWithToast(<HomePage />)
 
-    expect(screen.getByText(/Text Summarizer/)).toBeInTheDocument()
-    expect(screen.getByText("Paste your text and get AI-powered summaries instantly")).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText(/Text Summarizer/)).toBeInTheDocument()
+      expect(screen.getByText("Paste your text and get AI-powered summaries instantly")).toBeInTheDocument()
+    })
   })
 
-  it('should display the create snippet form', () => {
+  it('should display the create snippet form', async () => {
+    ;(fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ snippets: [], total: 0 })
+    })
+
     renderWithToast(<HomePage />)
 
-    expect(screen.getByText('Create New Snippet')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Paste your blog draft, transcript, or any text here...')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Create Snippet' })).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Create New Snippet')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('Paste your blog draft, transcript, or any text here...')).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Create Snippet' })).toBeInTheDocument()
+    })
   })
 
-  it('should display snippets section', () => {
+  it('should display snippets section', async () => {
+    ;(fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ snippets: [], total: 0 })
+    })
+
     renderWithToast(<HomePage />)
 
-    expect(screen.getByText('Your Snippets (0)')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Your Snippets (0)')).toBeInTheDocument()
+    })
   })
 
   it('should show empty state when no snippets exist', async () => {
@@ -67,10 +88,12 @@ describe('HomePage - Simple Tests', () => {
 
     renderWithToast(<HomePage />)
 
+    await waitFor(() => {
+      expect(screen.getByText('0/10,000 characters')).toBeInTheDocument()
+    })
+
     const textarea = screen.getByPlaceholderText('Paste your blog draft, transcript, or any text here...')
     
-    expect(screen.getByText('0/10,000 characters')).toBeInTheDocument()
-
     await user.type(textarea, 'Hello')
     expect(screen.getByText('5/10,000 characters')).toBeInTheDocument()
   })

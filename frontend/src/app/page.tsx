@@ -18,6 +18,7 @@ export default function HomePage() {
   const [isCreating, setIsCreating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToastContext()
+  
   const snippetService = useMemo(() => new SnippetService(API_BASE_URL), [])
 
   const fetchSnippets = useCallback(async () => {
