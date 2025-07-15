@@ -59,10 +59,10 @@ export default function HomePage() {
         description: "Snippet created and summarized!",
         variant: "success",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create snippet",
+        description: "Failed to create snippet",
         variant: "destructive",
       })
     } finally {

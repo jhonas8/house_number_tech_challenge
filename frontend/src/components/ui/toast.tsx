@@ -12,8 +12,8 @@ export interface ToastProps {
 }
 
 const toastVariants = {
-  default: "bg-background border",
-  destructive: "destructive border-destructive bg-destructive text-destructive-foreground",
+  default: "bg-white border border-gray-200",
+  destructive: "border-red-200 bg-red-50 text-red-900",
   success: "border-green-500 bg-green-50 text-green-900"
 }
 

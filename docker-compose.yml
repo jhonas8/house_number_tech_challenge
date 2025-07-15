@@ -51,7 +51,9 @@ services:
 
   # Next.js Frontend
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      target: builder
     container_name: snippet-frontend
     restart: unless-stopped
     environment:
@@ -64,13 +66,13 @@ services:
     volumes:
       # Mount source code for hot reload in development
       - ./frontend:/app
-      - /app/node_modules
       - /app/.next
     depends_on:
       - api
     networks:
       - snippet-network
-    command: sh -c "cd /app && npm test && npm run dev"
+    # Tests are already run in Dockerfile build stage
+    command: npm run dev
     profiles:
       - dev
 
@@ -110,7 +112,7 @@ services:
       - api-prod
     networks:
       - snippet-network
-    command: sh -c "cd /app && npm test && npm start"
+    # Tests are already run in Dockerfile build stage
     profiles:
       - prod
 

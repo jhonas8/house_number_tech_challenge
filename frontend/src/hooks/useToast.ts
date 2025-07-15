@@ -38,7 +38,7 @@ export function useToast() {
         setToasts(prev => prev.filter(toast => toast.id !== id))
       }, newToast.duration)
     }
-  }, [])
+  }, [setToasts])
 
   const dismiss = useCallback((id: string) => {
     setToasts(prev => prev.filter(toast => toast.id !== id))

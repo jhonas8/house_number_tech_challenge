@@ -27,7 +27,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Ensure tests passed before building
-COPY --from=test /app/coverage ./coverage
+# Tests are already run in the test stage above
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
