@@ -29,11 +29,12 @@ services:
     build: ./api
     container_name: snippet-api
     restart: unless-stopped
+    env_file:
+      - ./api/.env.test
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 3000
       MONGODB_URI: mongodb://admin:password@mongodb:27017/snippets?authSource=admin
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
     ports:
       - "3000:3000"
     depends_on:
@@ -78,11 +79,12 @@ services:
     build: ./api
     container_name: snippet-api-prod
     restart: unless-stopped
+    env_file:
+      - ./api/.env.test
     environment:
       NODE_ENV: production
       PORT: 3000
       MONGODB_URI: mongodb://admin:password@mongodb:27017/snippets?authSource=admin
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
     ports:
       - "3000:3000"
     depends_on:
