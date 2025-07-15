@@ -5,7 +5,10 @@ import { createSnippetSchema, snippetIdSchema } from '../types/snippet';
 export const validateRequest = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      schema.parse(req.body);
+      // Parse and transform the data
+      const parsedData = schema.parse(req.body);
+      // Update the request body with the transformed data
+      req.body = parsedData;
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
