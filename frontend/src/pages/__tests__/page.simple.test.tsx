@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import HomePage from '../page'
+import HomePage from '../'
 
 // Mock the toast context
 jest.mock('@/components/ui/toast-provider', () => ({

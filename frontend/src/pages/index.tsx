@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, Plus, FileText, Clock } from "lucide-react"
-import { useToast } from "@/hooks/useToast"
+import { useToast } from "../../../frontend/src/hooks/useToast"
 
 interface Snippet {
   id: string

@@ -1,5 +1,5 @@
 import { SnippetService } from '../snippetService'
-import { Snippet, CreateSnippetRequest } from '@/types/snippet'
+import { Snippet, CreateSnippetRequest } from '../../types/snippet'
 
 // Mock fetch globally
 global.fetch = jest.fn()

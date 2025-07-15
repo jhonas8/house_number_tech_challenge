@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import HomePage from '../page'
+import HomePage from '../'
 
 // Mock the SnippetService
 jest.mock('@/services/snippetService')

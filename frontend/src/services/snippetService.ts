@@ -1,4 +1,4 @@
-import { Snippet, CreateSnippetRequest, ListSnippetsResponse } from '@/types/snippet'
+import { Snippet, CreateSnippetRequest, ListSnippetsResponse } from '../types/snippet'
 
 export class SnippetService {
   private apiUrl: string
