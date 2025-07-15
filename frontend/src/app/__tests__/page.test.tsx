@@ -19,13 +19,13 @@ const renderWithToast = (component: React.ReactElement) => {
   return render(component)
 }
 
-describe('HomePage', () => {
+describe('HomePage - Core Functionality and Layout', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  describe('Initial Load', () => {
-    it('should display the page title and description', async () => {
+  describe('Page Initialization and Loading States', () => {
+    it('should render the main page header with correct title and description text', async () => {
       ;(fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ snippets: [], total: 0 })
@@ -39,7 +39,7 @@ describe('HomePage', () => {
       })
     })
 
-    it('should display the create snippet form', async () => {
+    it('should render the complete snippet creation form with textarea and submit button', async () => {
       ;(fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ snippets: [], total: 0 })
@@ -54,7 +54,7 @@ describe('HomePage', () => {
       })
     })
 
-    it('should display snippets section', async () => {
+    it('should render the snippets list section with correct initial count display', async () => {
       ;(fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ snippets: [], total: 0 })

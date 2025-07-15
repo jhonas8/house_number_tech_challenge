@@ -17,12 +17,12 @@ const renderWithToast = (component: React.ReactElement) => {
   return render(component)
 }
 
-describe('HomePage - Simple Tests', () => {
+describe('HomePage - UI Components and User Interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('should display the page title and description', async () => {
+  it('should display the main page header with title and subtitle', async () => {
     ;(fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ snippets: [], total: 0 })
@@ -36,7 +36,7 @@ describe('HomePage - Simple Tests', () => {
     })
   })
 
-  it('should display the create snippet form', async () => {
+  it('should display the snippet creation form with all required elements', async () => {
     ;(fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ snippets: [], total: 0 })
@@ -51,7 +51,7 @@ describe('HomePage - Simple Tests', () => {
     })
   })
 
-  it('should display snippets section', async () => {
+  it('should display the snippets section header with correct count', async () => {
     ;(fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ snippets: [], total: 0 })
@@ -64,7 +64,7 @@ describe('HomePage - Simple Tests', () => {
     })
   })
 
-  it('should show empty state when no snippets exist', async () => {
+  it('should show empty state message when no snippets exist', async () => {
     ;(fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ snippets: [], total: 0 })
@@ -78,7 +78,7 @@ describe('HomePage - Simple Tests', () => {
     })
   })
 
-  it('should display character count', async () => {
+  it('should display and update character count as user types in textarea', async () => {
     const user = userEvent.setup()
 
     ;(fetch as jest.Mock).mockResolvedValueOnce({

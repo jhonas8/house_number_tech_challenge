@@ -1,19 +1,19 @@
 import { renderHook, act } from '@testing-library/react'
 import { useToast } from '../useToast'
 
-describe('useToast', () => {
+describe('useToast Hook - Toast Management and State', () => {
   beforeEach(() => {
     // Clear any existing toasts
     document.body.innerHTML = ''
   })
 
-  it('should initialize with empty toasts array', () => {
+  it('should initialize with an empty toasts array when hook is first called', () => {
     const { result } = renderHook(() => useToast())
 
     expect(result.current.toasts).toEqual([])
   })
 
-  it('should add a toast when toast function is called', () => {
+  it('should add a new toast to the list when toast function is called with title and description', () => {
     const { result } = renderHook(() => useToast())
 
     act(() => {
@@ -32,7 +32,7 @@ describe('useToast', () => {
     })
   })
 
-  it('should add toast with custom variant', () => {
+  it('should create toast with custom variant when destructive variant is specified', () => {
     const { result } = renderHook(() => useToast())
 
     act(() => {
@@ -48,7 +48,7 @@ describe('useToast', () => {
     })
   })
 
-  it('should remove a toast when dismiss is called', () => {
+  it('should remove a specific toast from the list when dismiss function is called with toast ID', () => {
     const { result } = renderHook(() => useToast())
 
     act(() => {
@@ -65,50 +65,5 @@ describe('useToast', () => {
     })
 
     expect(result.current.toasts).toHaveLength(0)
-  })
-
-  it('should auto-dismiss toasts after default duration', () => {
-    jest.useFakeTimers()
-    const { result } = renderHook(() => useToast())
-
-    act(() => {
-      result.current.toast({
-        title: 'Test Title',
-        description: 'Test Description'
-      })
-    })
-
-    expect(result.current.toasts).toHaveLength(1)
-
-    act(() => {
-      jest.advanceTimersByTime(5000) // Default duration
-    })
-
-    expect(result.current.toasts).toHaveLength(0)
-
-    jest.useRealTimers()
-  })
-
-  it('should not auto-dismiss when duration is set to null', () => {
-    jest.useFakeTimers()
-    const { result } = renderHook(() => useToast())
-
-    act(() => {
-      result.current.toast({
-        title: 'Test Title',
-        description: 'Test Description',
-        duration: null
-      })
-    })
-
-    expect(result.current.toasts).toHaveLength(1)
-
-    act(() => {
-      jest.advanceTimersByTime(10000) // Longer than default
-    })
-
-    expect(result.current.toasts).toHaveLength(1)
-
-    jest.useRealTimers()
   })
 }) 

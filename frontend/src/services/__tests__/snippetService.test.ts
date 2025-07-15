@@ -4,7 +4,7 @@ import { Snippet, CreateSnippetRequest } from '@/types/snippet'
 // Mock fetch globally
 global.fetch = jest.fn()
 
-describe('SnippetService', () => {
+describe('SnippetService - API Integration and Data Management', () => {
   let snippetService: SnippetService
   const mockApiUrl = 'http://localhost:3000'
 
@@ -13,8 +13,8 @@ describe('SnippetService', () => {
     jest.clearAllMocks()
   })
 
-  describe('getAllSnippets', () => {
-    it('should fetch all snippets successfully', async () => {
+  describe('getAllSnippets - Fetching All Snippets', () => {
+    it('should successfully fetch and return all snippets from the API with correct structure', async () => {
       const mockSnippets: Snippet[] = [
         {
           id: '1',
@@ -46,7 +46,7 @@ describe('SnippetService', () => {
       expect(result).toEqual(mockResponse)
     })
 
-    it('should throw error when API call fails', async () => {
+    it('should throw an error with descriptive message when API returns 500 status code', async () => {
       ;(fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
         status: 500,
@@ -58,7 +58,7 @@ describe('SnippetService', () => {
       )
     })
 
-    it('should throw error when network error occurs', async () => {
+    it('should throw an error with network error message when fetch request fails', async () => {
       const networkError = new Error('Network error')
       ;(fetch as jest.Mock).mockRejectedValueOnce(networkError)
 
@@ -66,8 +66,8 @@ describe('SnippetService', () => {
     })
   })
 
-  describe('getSnippetById', () => {
-    it('should fetch a snippet by ID successfully', async () => {
+  describe('getSnippetById - Fetching Individual Snippets', () => {
+    it('should successfully fetch and return a single snippet by its ID from the API', async () => {
       const mockSnippet: Snippet = {
         id: '1',
         text: 'Test text',
@@ -86,7 +86,7 @@ describe('SnippetService', () => {
       expect(result).toEqual(mockSnippet)
     })
 
-    it('should throw error when snippet not found', async () => {
+    it('should throw an error with descriptive message when snippet with given ID is not found (404)', async () => {
       ;(fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
         status: 404,
@@ -99,8 +99,8 @@ describe('SnippetService', () => {
     })
   })
 
-  describe('createSnippet', () => {
-    it('should create a snippet successfully', async () => {
+  describe('createSnippet - Creating New Snippets', () => {
+    it('should successfully create a new snippet by sending POST request with correct data structure', async () => {
       const createRequest: CreateSnippetRequest = {
         text: 'New test text'
       }
@@ -129,7 +129,7 @@ describe('SnippetService', () => {
       expect(result).toEqual(mockResponse)
     })
 
-    it('should throw error when creation fails', async () => {
+    it('should throw an error with descriptive message when snippet creation fails due to validation (400)', async () => {
       const createRequest: CreateSnippetRequest = {
         text: ''
       }
