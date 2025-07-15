@@ -20,6 +20,28 @@ COPY . .
 # Run tests before building
 RUN npm test
 
+# Development stage - optimized for hot reloading
+FROM base AS dev
+WORKDIR /app
+
+ENV NODE_ENV development
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code (will be mounted as volume in docker-compose)
+COPY . .
+
+# Expose port for development server
+EXPOSE 3030
+
+ENV PORT 3030
+ENV HOSTNAME "0.0.0.0"
+
+# Start development server with hot reloading
+CMD ["npm", "run", "dev"]
+
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
